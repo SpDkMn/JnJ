@@ -1,0 +1,131 @@
+@font-face{
+    font-family:"AkzidenzGrotesk-Medium";
+    src: url("/fonts/Berthold Akzidenz Grotesk Medium.otf");
+}
+body{
+  background: #dcdcdc;
+  background-repeat: no-repeat;
+  background-size: 100%;
+  color: white;
+  font-family: AkzidenzGrotesk-Medium,Arial;
+  font-weight: normal;
+  padding-top: 70px;
+}
+label{
+  font-weight: normal;
+}
+option,select{
+  color:#F30617;
+  /*font-weight: bold;*/
+}
+td{
+  color:#F30617;
+  /*font-weight: bold;*/
+}
+textarea{
+  resize:none;
+}
+th{
+  font-weight: normal;
+}
+
+.alert{
+  border-radius: 0px;
+}
+.btn-jnj{
+  background-color: white;
+  border-color: white;
+  color: #F30617;
+  border-radius: 0px;
+  /*font-weight: bold;*/
+  margin-bottom: 20px
+}
+.btn-jnj:hover{
+  background-color: #ce969a;
+  border-color: #ce969a;
+  color: #F30617;
+}
+.dataTables_info{
+  color:white;
+}
+.datepicker .datepicker-switch:hover, .datepicker .next:hover, .datepicker .prev:hover, .datepicker tfoot tr th:hover{
+  background-color: white;
+  color:#F30617;
+}
+.datepicker table tr td.day.focused, .datepicker table tr td.day:hover{
+  background-color: white;
+  color:#F30617;
+}
+.datepicker table tr td.new:hover, .datepicker table tr td.old:hover{
+  background-color: #dcdcdc;
+  color:#F30617;
+}
+.day{
+  color:white;
+}
+.dropdown-menu{
+  background-color: #F30617;
+  opacity: 0.8;
+}
+.form-control{
+  border-radius: 0px;
+}
+.has-error{
+  color:white;
+}
+.has-error .checkbox, .has-error .checkbox-inline, .has-error .control-label, .has-error .help-block, .has-error .radio, .has-error .radio-inline, .has-error.checkbox label, .has-error.checkbox-inline label, .has-error.radio label, .has-error.radio-inline label{
+  color:white;
+}
+.help-block{
+  color: white;
+}
+.imgJnJ{
+  width: 235px;
+}
+.jumbotron{
+  background-color: transparent;
+}
+.navbar{
+  border-bottom: 0px;
+  background-color: #F30617;
+  box-shadow: 0 1px 2px #666666;
+  opacity: 0.9;
+  height: 70px;
+}
+.navbar-inverse .navbar-nav>li>a{
+  font-family: AkzidenzGrotesk-Medium,Arial;
+  color: white;
+  line-height: 24px;
+  font-size: 11px;
+  text-transform: uppercase;
+}
+.navbar-inverse .navbar-nav>li>a:hover{
+  color: white;
+  text-transform: uppercase;
+  font-weight: normal;
+  text-decoration: underline;
+}
+.navbar-inverse .navbar-collapse, .navbar-inverse .navbar-form{
+    border-color: #F30617;
+    background: #F30617;
+    margin-top: 15px;
+}
+.navbar-inverse .navbar-toggle{
+    border-color: white;
+    background: #F30617;
+}
+.panel-body{
+    background: #F30617;
+}
+.panel-default{
+  border: 0px;
+}
+.dataTables_wrapper .dataTables_filter{
+  color: #ea0e0e;
+}
+
+@media only screen and (min-width:420px) {
+  body {
+    background-image: url("../img/bebe.jpg");
+  }
+}

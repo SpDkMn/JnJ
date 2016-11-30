@@ -1,0 +1,106 @@
+@font-face{
+    font-family:"AkzidenzGrotesk-Medium";
+    src: url("/fonts/Berthold Akzidenz Grotesk Medium.otf");
+}
+body{
+  background: #dcdcdc;
+  background-image: url("../img/bebe.jpg");
+  background-repeat: no-repeat;
+  background-size: 100%;
+  color: white;
+  padding-top: 70px;
+}
+td{
+  color:#e5101f;
+  font-weight: bold;
+}
+option,select{
+  color:#e5101f;
+  font-weight: bold;
+}
+textarea{
+  resize:none;
+}
+.alert{
+  border-radius: 0px;
+}
+.dropdown-menu{
+  background-color: #e5101f;
+  opacity: 0.8;
+}
+.datepicker .datepicker-switch:hover, .datepicker .next:hover, .datepicker .prev:hover, .datepicker tfoot tr th:hover{
+  background-color: white;
+  color:#e5101f;
+}
+.datepicker table tr td.day.focused, .datepicker table tr td.day:hover{
+  background-color: white;
+  color:#e5101f;
+}
+.datepicker table tr td.new:hover, .datepicker table tr td.old:hover{
+  background-color: #dcdcdc;
+  color:#e5101f;
+}
+.day{
+  color:white;
+}
+.navbar{
+  border-bottom: 0px;
+  background-color: #e5101f;
+  box-shadow: 0 1px 2px #666666;
+  opacity: 0.92;
+  height: 70px;
+}
+.imgJnJ{
+  width: 235px;
+}
+.form-control{
+  border-radius: 0px;
+}
+.panel-body{
+    background: #e5101f;
+}
+.btn-jnj{
+  background-color: white;
+  border-color: white;
+  color: #e5101f;
+  border-radius: 0px;
+  font-weight: bold;
+  margin-bottom: 20px
+}
+.btn-jnj:hover{
+  background-color: #ce969a;
+  border-color: #ce969a;
+  color: #e5101f;
+}
+.help-block{
+  color: white;
+}
+.has-error{
+  color:white;
+}
+.navbar-inverse .navbar-nav>li>a{
+  font-family: AkzidenzGrotesk-Medium,Arial;
+  color: white;
+  line-height: 24px;
+  font-size: 11px;
+  text-transform: uppercase;
+  font-weight: normal;
+}
+.navbar-inverse .navbar-nav>li>a:hover{
+  color: white;
+  text-transform: uppercase;
+  font-weight: normal;
+  text-decoration: underline;
+}
+.jumbotron{
+  background-color: initial;
+}
+.dataTables_info{
+  color:white;
+}
+.panel-default{
+  border: 0px;
+}
+.has-error .checkbox, .has-error .checkbox-inline, .has-error .control-label, .has-error .help-block, .has-error .radio, .has-error .radio-inline, .has-error.checkbox label, .has-error.checkbox-inline label, .has-error.radio label, .has-error.radio-inline label{
+  color:white;
+}
