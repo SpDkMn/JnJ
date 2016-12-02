@@ -39,31 +39,33 @@
               <span class="help-block text-center col-sm-12"><strong>{{ $errors->first('nombreDelConcurso') }}</strong></span>
               @endif
             </div>
-            Seleccione las distribuidoras que se van a cargar
-            <table class="table" style="background-color: #f9f9f9;">
-              <thead style="color: #f30617;">
-                <tr>
-                  <th></th>
-                  <th>CODIGO</th>
-                  <th>CANAL</th>
-                  <th>DISTRIBUIDORAS</th>
-                </tr>
-              </thead>
-              <tbody>
-              </tbody>
-            </table>
-            <div class="text-center" id="formato">
-            </div>
-            <div class="form-group @if ($errors->has('archivoDeCuota')) has-error @endif">
-              <label for="archivoDeCuota" class="col-sm-4 control-label">Ingresar archivo del concurso</label>
-              <div class="col-sm-8" style="padding:0px;">
-                <input type="file" id="archivoDeCuota" name="archivoDeCuota" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" disabled="true">
+            <div class="distribuidoras" style="display:none">
+              Seleccione las distribuidoras que se van a cargar
+              <table class="table" style="background-color: #f9f9f9;">
+                <thead style="color: #f30617;">
+                  <tr>
+                    <th></th>
+                    <th>CODIGO</th>
+                    <th>CANAL</th>
+                    <th>DISTRIBUIDORAS</th>
+                  </tr>
+                </thead>
+                <tbody>
+                </tbody>
+              </table>
+              <div class="text-center" id="formato">
               </div>
-              @if ($errors->has('archivoDeCuota'))
-              <span class="help-block text-center"><strong>{{ $errors->first('archivoDeCuota') }}</strong></span>
-              @endif
+              <div class="form-group @if ($errors->has('archivoDeCuota')) has-error @endif">
+                <label for="archivoDeCuota" class="col-sm-4 control-label">Ingresar archivo del concurso</label>
+                <div class="col-sm-8" style="padding:0px;">
+                  <input type="file" id="archivoDeCuota" name="archivoDeCuota" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" disabled="true">
+                </div>
+                @if ($errors->has('archivoDeCuota'))
+                <span class="help-block text-center"><strong>{{ $errors->first('archivoDeCuota') }}</strong></span>
+                @endif
+              </div>
             </div>
-            <div class="text-center">
+            <div class="bloque-reporte text-center" style="display:none">
               <button type="submit" class="btn btn-jnj" name="submit" value="submit">Cargar Cuotas</button>
             </div>
           </form>
@@ -77,9 +79,17 @@
   <script src="{{asset('js/offcanvas.js')}}"></script>
   <script>
   $(document).ready(function() {
+    $("#archivoDeCuota").on('change', function(evt,params){
+      if($("#archivoDeCuota").val() == ""){
+        $( ".bloque-reporte" ).hide()
+      }else{
+        $( ".bloque-reporte" ).show()
+      }
+    })
     $(".table> tbody:last").children().remove();
     $('#concursos').on('change', function(evt, params) {
       $id_concurso = $("#concursos option:selected").val()
+      $(".distribuidoras").show()
       $.ajax( "{{url('API/v1/cuota/concursos')}}/"+$id_concurso )
         .done(function( data, textStatus, jqXHR ) {
           $(".table> tbody:last").children().remove();
@@ -94,12 +104,15 @@
           })
           $( "#formato" ).children().remove()
           $( "#formato" ).append("<button class='btn btn-jnj' type='submit' id='download_formato' name='submit' value='formato'>Descargar formato</button>")
-          $( "#archivoDeCuota" ).prop( "disabled", false );
+          $( "#archivoDeCuota" ).prop( "disabled", false )
         })
         .fail(function() {
           $( "#formato" ).children().remove()
-          $(".table> tbody:last").children().remove();
-          $( "#archivoDeCuota" ).prop( "disabled", true );
+          $(".table> tbody:last").children().remove()
+          $( "#archivoDeCuota" ).prop( "disabled", true )
+          $( ".distribuidoras" ).hide()
+          $( ".bloque-reporte" ).hide()
+          $("#archivoDeCuota").val("")
         })
     })
   });

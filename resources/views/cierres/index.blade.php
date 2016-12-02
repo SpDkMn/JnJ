@@ -68,6 +68,7 @@
                   </span>
               @endif
             </div>
+            <div class="distribuidoras" style="display:none">
               Seleccione las distribuidoras que se van a cargar
               <table class="table" style="background-color: #f9f9f9;">
                 <thead style="color: #f30617;">
@@ -85,16 +86,17 @@
               </table>
               <div class="text-center" id="formato">
               </div>
-            <div class="form-group @if ($errors->has('archivoDeCierre')) has-error @endif">
-              <label for="archivoDeCierre" class="col-sm-4 control-label">Ingresar archivo de cierre</label>
-              <div class="col-sm-8" style="padding:0px;">
-                <input type="file" id="archivoDeCierre" name="archivoDeCierre" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"  disabled="true">
+              <div class="form-group @if ($errors->has('archivoDeCierre')) has-error @endif">
+                <label for="archivoDeCierre" class="col-sm-4 control-label">Ingresar archivo de cierre</label>
+                <div class="col-sm-8" style="padding:0px;">
+                  <input type="file" id="archivoDeCierre" name="archivoDeCierre" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"  disabled="true">
+                </div>
+                @if ($errors->has('archivoDeCierre'))
+                <span class="help-block text-center"><strong>{{ $errors->first('archivoDeCierre') }}</strong></span>
+                @endif
               </div>
-              @if ($errors->has('archivoDeCierre'))
-              <span class="help-block text-center"><strong>{{ $errors->first('archivoDeCierre') }}</strong></span>
-              @endif
             </div>
-            <div class="text-center">
+            <div class="bloque-reporte text-center" style="display:none">
               <button type="submit" class="btn btn-jnj">Cargar Cierre</button>
             </div>
           </form>
@@ -111,8 +113,16 @@
   <script>
   $(document).ready(function() {
     $(".table> tbody:last").children().remove();
+    $("#archivoDeCierre").on('change', function(evt,params){
+      if($("#archivoDeCierre").val() == ""){
+        $( ".bloque-reporte" ).hide()
+      }else{
+        $( ".bloque-reporte" ).show()
+      }
+    })
     $('#concursos').on('change', function(evt, params) {
       $id_concurso = $("#concursos option:selected").val()
+      $(".distribuidoras").show()
       $.ajax("{{url('API/v1/concurso')}}/"+$id_concurso)
         .done(function(data,textStatus,jqXHR){
           var f_fin = data.f_fin.split('-');
@@ -123,7 +133,7 @@
           $('#fechaDeFin').val($f_fin)
         })
         .fail(function(){
-          console.log('error');
+          $(".distribuidoras").hide()
         })
       $.ajax( "{{url('API/v1/cuota/concursos')}}/"+$id_concurso )
         .done(function( data, textStatus, jqXHR ) {
@@ -156,6 +166,9 @@
           $( "#formato" ).children().remove()
           $(".table> tbody:last").children().remove();
           $( "#archivoDeCierre" ).prop( "disabled", true );
+          $(".distribuidoras").hide()
+          $( ".bloque-reporte" ).hide()
+          $("#archivoDeCierre").val("")
         })
     })
   });

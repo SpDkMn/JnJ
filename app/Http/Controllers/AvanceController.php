@@ -36,6 +36,9 @@ class AvanceController extends Controller
           ->join('representantes as r', 'c.representante_id', '=', 'r.id')
           ->join('distribuidoras as d', 'd.representante_id', '=', 'r.id')
           ->where('d.ejecutivo_id','=',Auth::user()->ejecutivo->id)
+          ->whereNull('c.deleted_at')
+          ->orderBy('c.f_inicio','desc')
+          ->orderBy('c.name','asc')
           ->distinct()
           ->get();
         return view('avances.reporte',['concursos'=>$result]);
@@ -59,7 +62,10 @@ class AvanceController extends Controller
         ->join('distribuidoras as d', 'd.representante_id', '=', 'r.id')
         ->where('d.ejecutivo_id','=',Auth::user()->ejecutivo->id)
         ->where('c.f_inicio', '<=', $fecha_actual)
-        ->where('c.f_fin', '>=', $fecha_actual)
+        //->where('c.f_fin', '>=', $fecha_actual)
+        ->whereNull('c.deleted_at')
+        ->orderBy('c.f_inicio','desc')
+        ->orderBy('c.name','asc')
         ->distinct()
         ->get();
         return view('avances.index',['concursos'=>$result]);
@@ -240,7 +246,8 @@ class AvanceController extends Controller
           ->join('representantes as r', 'a.representante_id', '=', 'r.id')
           ->where('e.id','=',Auth::user()->ejecutivo->id)
           ->where('co.id','=',$co)
-          ->whereIn('d.id', $ch);
+          ->whereIn('d.id', $ch)
+          ->whereNull('co.deleted_at');
 
         $avances = $avances->select($select)->get();
 
@@ -262,9 +269,12 @@ class AvanceController extends Controller
           ->join('representantes as r', 'c.representante_id', '=', 'r.id')
           ->join('distribuidoras as d', 'd.representante_id', '=', 'r.id')
           ->where('d.ejecutivo_id','=',Auth::user()->ejecutivo->id)
+          ->whereNull('c.deleted_at')
+          ->orderBy('c.f_inicio','desc')
+          ->orderBy('c.name','asc')
           ->distinct()
           ->get();
-        return view('avances.reporte_1',['concursos'=>$result,'avances'=>$avances,'header'=>$header]);
+        return view('avances.reporte_post',['concursos'=>$result,'avances'=>$avances,'header'=>$header]);
     }
 
     public function reporte_representante(){
@@ -275,6 +285,9 @@ class AvanceController extends Controller
           'c.periodo as periodo'
         )
         ->where('c.representante_id','=',Auth::user()->representante->id)
+        ->whereNull('c.deleted_at')
+        ->orderBy('c.f_inicio','desc')
+        ->orderBy('c.name','asc')
         ->get();
       return view('avances.reporte_representante',['concursos'=>$result]);
     }
@@ -286,6 +299,9 @@ class AvanceController extends Controller
           'c.name as titulo',
           'c.periodo as periodo'
         )
+        ->whereNull('c.deleted_at')
+        ->orderBy('c.f_inicio','desc')
+        ->orderBy('c.name','asc')
         ->get();
       return view('avances.reporte_admin',['concursos'=>$result]);
     }
@@ -337,7 +353,8 @@ class AvanceController extends Controller
         ->join('representantes as r', 'a.representante_id', '=', 'r.id')
         ->where('a.representante_id','=',Auth::user()->representante->id)
         ->where('co.id','=',$co)
-        ->whereIn('d.id', $ch);
+        ->whereIn('d.id', $ch)
+        ->whereNull('co.deleted_at');
 
       $avances = $avances->select($select)->get();
 
@@ -357,8 +374,11 @@ class AvanceController extends Controller
           'c.periodo as periodo'
         )
         ->where('c.representante_id','=',Auth::user()->representante->id)
+        ->whereNull('c.deleted_at')
+        ->orderBy('c.f_inicio','desc')
+        ->orderBy('c.name','asc')
         ->get();
-      return view('avances.reporte_1_representante',['concursos'=>$result,'avances'=>$avances,'header'=>$header]);
+      return view('avances.reporte_representante_post',['concursos'=>$result,'avances'=>$avances,'header'=>$header]);
     }
 
     public function reporte_view_admin(ReporteAvanceAdminRequest $request){
@@ -410,7 +430,8 @@ class AvanceController extends Controller
         ->join('ejecutivos as e', 'a.ejecutivo_id', '=', 'e.id')
         ->join('representantes as r', 'a.representante_id', '=', 'r.id')
         ->where('co.id','=',$co)
-        ->whereIn('d.id', $ch);
+        ->whereIn('d.id', $ch)
+        ->whereNull('co.deleted_at');
 
       $avances = $avances->select($select)->get();
 
@@ -431,7 +452,10 @@ class AvanceController extends Controller
           'c.name as titulo',
           'c.periodo as periodo'
         )
+        ->whereNull('c.deleted_at')
+        ->orderBy('c.f_inicio','desc')
+        ->orderBy('c.name','asc')
         ->get();
-      return view('avances.reporte_1_admin',['concursos'=>$result,'avances'=>$avances,'header'=>$header]);
+      return view('avances.reporte_admin_post',['concursos'=>$result,'avances'=>$avances,'header'=>$header]);
     }
 }

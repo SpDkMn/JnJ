@@ -33,6 +33,9 @@ class CuotaController extends Controller
            'c.codconcurso as CODIGO',
            'c.periodo as PERIODO'
          )
+         ->whereNull('c.deleted_at')
+         ->orderBy('c.f_inicio','desc')
+         ->orderBy('c.name','asc')
          ->get();
        $array = array();
        foreach($result as $a){
@@ -52,6 +55,9 @@ class CuotaController extends Controller
           ->join('representantes as r', 'c.representante_id', '=', 'r.id')
           ->join('distribuidoras as d', 'd.representante_id', '=', 'r.id')
           ->where('d.ejecutivo_id','=',Auth::user()->ejecutivo->id)
+          ->whereNull('c.deleted_at')
+          ->orderBy('c.f_inicio','desc')
+          ->orderBy('c.name','asc')
           ->distinct()
           ->get();
         return view('cuotas.reporte',['concursos'=>$result]);
@@ -76,7 +82,10 @@ class CuotaController extends Controller
         ->join('distribuidoras as d', 'd.representante_id', '=', 'r.id')
         ->where('d.ejecutivo_id','=',Auth::user()->ejecutivo->id)
         ->where('c.f_inicio', '<=', $fecha_actual)
-        ->where('c.f_inicio', '>=', $fecha_limite)
+        //->where('c.f_inicio', '>=', $fecha_limite)
+        ->whereNull('c.deleted_at')
+        ->orderBy('c.f_inicio','desc')
+        ->orderBy('c.name','asc')
         ->distinct()
         ->get();
         return view('cuotas.index',['concursos'=>$result]);
@@ -90,6 +99,7 @@ class CuotaController extends Controller
       if( !is_null($c->value_condition) ){$dato['condicion'] = $c->value_condition;
       }else{$dato['condicion'] = '0';}
       $sups = Supervisor::whereIn('distribuidor_id',$request->checked)->orderBy('cargo', 'desc')->get();
+      dd($sups);
       DBExcel::formatoCuota($sups,$dato);
     }
 
@@ -125,7 +135,6 @@ class CuotaController extends Controller
 
         // Carga los datos y los muestra en la web
         return DBExcel::cargarCuota($path,$name,$c,$codigos);
-        //return redirect()->back()->with('status_data', 'El archivo fue cargado correctamente.');
     }
 
     public function storeF(Request $request){
@@ -236,7 +245,8 @@ class CuotaController extends Controller
           ->join('representantes as r', 'c.representante_id', '=', 'r.id')
           ->where('e.id','=',Auth::user()->ejecutivo->id)
           ->where('co.id','=',$co)
-          ->whereIn('d.id', $ch);
+          ->whereIn('d.id', $ch)
+          ->whereNull('co.deleted_at');
 
         $cuotas = $cuotas->select($select)->get();
 
@@ -258,9 +268,12 @@ class CuotaController extends Controller
           ->join('representantes as r', 'c.representante_id', '=', 'r.id')
           ->join('distribuidoras as d', 'd.representante_id', '=', 'r.id')
           ->where('d.ejecutivo_id','=',Auth::user()->ejecutivo->id)
+          ->whereNull('c.deleted_at')
+          ->orderBy('c.f_inicio','desc')
+          ->orderBy('c.name','asc')
           ->distinct()
           ->get();
-        return view('cuotas.reporte_1',['concursos'=>$result,'cuotas'=>$cuotas,'header'=>$header]);
+        return view('cuotas.reporte_post',['concursos'=>$result,'cuotas'=>$cuotas,'header'=>$header]);
     }
 
     public function reporte_representante(){
@@ -271,19 +284,25 @@ class CuotaController extends Controller
           'c.periodo as periodo'
         )
         ->where('c.representante_id','=',Auth::user()->representante->id)
+        ->whereNull('c.deleted_at')
+        ->orderBy('c.f_inicio','desc')
+        ->orderBy('c.name','asc')
         ->get();
       return view('cuotas.reporte_representante',['concursos'=>$result]);
     }
 
-    public function reporte_representante_admin(){
+    public function reporte_admin(){
       $result = DB::table('concursos as c')
         ->select(
           'c.id as id',
           'c.name as titulo',
           'c.periodo as periodo'
         )
+        ->whereNull('c.deleted_at')
+        ->orderBy('c.f_inicio','desc')
+        ->orderBy('c.name','asc')
         ->get();
-      return view('cuotas.reporte_representante_admin',['concursos'=>$result]);
+      return view('cuotas.reporte_admin',['concursos'=>$result]);
     }
 
     public function reporte_view_representante(Request $request){
@@ -319,7 +338,8 @@ class CuotaController extends Controller
         ->join('ejecutivos as e', 'c.ejecutivo_id', '=', 'e.id')
         ->join('representantes as r', 'c.representante_id', '=', 'r.id')
         ->where('co.id','=',$co)
-        ->whereIn('d.id', $ch);
+        ->whereIn('d.id', $ch)
+        ->whereNull('co.deleted_at');
 
       $cuotas = $cuotas->select($select)->get();
 
@@ -339,8 +359,11 @@ class CuotaController extends Controller
           'c.periodo as periodo'
         )
         ->where('c.representante_id','=',Auth::user()->representante->id)
+        ->whereNull('c.deleted_at')
+        ->orderBy('c.f_inicio','desc')
+        ->orderBy('c.name','asc')
         ->get();
-      return view('cuotas.reporte_1_representante',['concursos'=>$result,'cuotas'=>$cuotas,'header'=>$header]);
+      return view('cuotas.reporte_representante_post',['concursos'=>$result,'cuotas'=>$cuotas,'header'=>$header]);
     }
     public function reporte_view_admin(Request $request){
       $co = $request->concursos;
@@ -376,7 +399,8 @@ class CuotaController extends Controller
         ->join('ejecutivos as e', 'c.ejecutivo_id', '=', 'e.id')
         ->join('representantes as r', 'c.representante_id', '=', 'r.id')
         ->where('co.id','=',$co)
-        ->whereIn('d.id', $ch);
+        ->whereIn('d.id', $ch)
+        ->whereNull('co.deleted_at');
 
       $cuotas = $cuotas->select($select)->get();
 
@@ -395,7 +419,10 @@ class CuotaController extends Controller
           'c.name as titulo',
           'c.periodo as periodo'
         )
+        ->whereNull('c.deleted_at')
+        ->orderBy('c.f_inicio','desc')
+        ->orderBy('c.name','asc')
         ->get();
-      return view('cuotas.reporte_1_admin',['concursos'=>$result,'cuotas'=>$cuotas,'header'=>$header]);
+      return view('cuotas.reporte_admin_post',['concursos'=>$result,'cuotas'=>$cuotas,'header'=>$header]);
     }
 }

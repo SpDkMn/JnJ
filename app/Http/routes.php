@@ -137,7 +137,7 @@ Route::group(['middleware' => ['auth','ejecutivo']], function () {
       Route::get('/reportes/admin/concursos',['as'=>'reporte_concursos_admin','uses'=>'ConcursoController@reporte_concursos_admin']);
       Route::get('/API/v1/admin/concurso',['as'=>'concurso_admin_list','uses'=>'ConcursoController@list_admin']);
 
-      Route::get('/reportes/admin/cuotas',['as' => 'reporte_cuota_representante_admin', 'uses' => 'CuotaController@reporte_representante_admin']);
+      Route::get('/reportes/admin/cuotas',['as' => 'reporte_cuota_representante_admin', 'uses' => 'CuotaController@reporte_admin']);
       Route::post('/reportes/admin/cuotas',['as' => 'reporte_couta_post_admin','uses' => 'CuotaController@reporte_view_admin']);
 
       Route::get('/reportes/admin/avances',['as' => 'reporte_avance_admin', 'uses' => 'AvanceController@reporte_admin']);

@@ -21,8 +21,8 @@
           <table id="data_concursos" class="display" cellspacing="0" width="100%">
             <thead>
               <tr>
-                <th>PERIODO</th>
                 <th>NOMBRE</th>
+                <th>PERIODO</th>
                 <th>INICIO</th>
                 <th>FIN</th>
                 <th>DESCARGAR</th>

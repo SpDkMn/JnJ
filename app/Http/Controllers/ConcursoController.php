@@ -38,8 +38,8 @@ class ConcursoController extends Controller
       $result = DB::table('concursos as c')
         ->select(
           //'c.codconcurso as CODIGO',
-          'c.periodo as PERIODO',
           'c.name as NOMBRE',
+          'c.periodo as PERIODO',
           'c.f_inicio as INICIO',
           'c.f_fin as FIN',
           DB::raw('CONCAT(\'<a href="'.URL('/concurso/download/').'/\',c.id,\'"><img src="'.asset('img/pdf.png').'" alt="Archivo de excel" class="img-thumbnail img-responsive"></a>\') as DOWNLOAD'),
@@ -47,6 +47,8 @@ class ConcursoController extends Controller
           DB::raw('CONCAT(\'<a href="'.URL('/concurso/eliminar/\',c.id,\'').'" style="text-decoration:none;color: #e5101f;" class="id_distribuidora" data-id="\',c.id,\'"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>\') as ELIMINAR')
         )
         ->whereNull('c.deleted_at')
+        ->orderBy('c.f_inicio','desc')
+        ->orderBy('c.name','asc')
         ->get();
       $array = array();
       foreach($result as $a){
@@ -70,6 +72,8 @@ class ConcursoController extends Controller
         )
         ->where('c.representante_id','=',Auth::user()->representante->id)
         ->whereNull('c.deleted_at')
+        ->orderBy('c.f_inicio','desc')
+        ->orderBy('c.name','asc')
         ->get();
       $array = array();
       foreach($result as $a){
@@ -82,9 +86,11 @@ class ConcursoController extends Controller
     public function list_view(){
       $result = DB::table('concursos as c')
         ->select(
-          'c.periodo as PERIODO',
-          'r.codcanal as CANAL',
           'c.name as NOMBRE',
+          'r.codcanal as CANAL',
+          'c.periodo as PERIODO',
+          'c.f_inicio as INICIO',
+          'c.f_fin as FIN',
           DB::raw('CONCAT(\'<a href="'.URL('concursos/distribuidoras/').'/\',c.id,\'" style="text-decoration:none;color: #e5101f;" class="id_distribuidora"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>\') as VER'),
           DB::raw('CONCAT(\'<a href="'.URL('download/concurso/').'/\',c.id,\'"><img src="'.asset('img/pdf.png').'" alt="Archivo de excel" class="img-thumbnail img-responsive"></a>\') as DOWNLOAD')
         )
@@ -92,6 +98,8 @@ class ConcursoController extends Controller
         ->join('distribuidoras as d', 'd.representante_id', '=', 'r.id')
         ->where('d.ejecutivo_id','=',Auth::user()->ejecutivo->id)
         ->whereNull('c.deleted_at')
+        ->orderBy('c.f_inicio','desc')
+        ->orderBy('c.name','asc')
         ->distinct()
         ->get();
       $array = array();

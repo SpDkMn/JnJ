@@ -33,19 +33,21 @@
               <span class="help-block text-center col-sm-12"><strong>{{ $errors->first('nombreDelConcurso') }}</strong></span>
               @endif
             </div>
-            Seleccione las distribuidoras
-            <table class="table" id="table" style="background-color: #f9f9f9;">
-              <thead style="color: #f30617;">
-                <tr>
-                  <th></th>
-                  <th>CODIGO</th>
-                  <th>DISTRIBUIDORAS</th>
-                </tr>
-              </thead>
-              <tbody>
-              </tbody>
-            </table>
-            <div class="text-center">
+            <div class="distribuidoras" style="display:none">
+              Seleccione las distribuidoras
+              <table class="table" id="table" style="background-color: #f9f9f9;">
+                <thead style="color: #f30617;">
+                  <tr>
+                    <th></th>
+                    <th>CODIGO</th>
+                    <th>DISTRIBUIDORAS</th>
+                  </tr>
+                </thead>
+                <tbody>
+                </tbody>
+              </table>
+            </div>
+            <div class="bloque-reporte text-center" style="display:none">
               <button type="submit" class="btn btn-jnj">Ver Reporte</button>
               <button type="submit" class="btn btn-jnj" disabled="true" name="submit" value="export" id="exportar">Exportar Reporte</button>
             </div>
@@ -81,6 +83,7 @@
     $("#table> tbody:last").children().remove();
     $('#concursos').on('change', function(evt, params) {
       $id_concurso = $("#concursos option:selected").val()
+      $(".distribuidoras").show()
       $.ajax( "{{url('API/v1/admin/cuotas/concursos')}}/"+$id_concurso )
         .done(function( data, textStatus, jqXHR ) {
           $("#table> tbody:last").children().remove();
@@ -93,10 +96,13 @@
             $('#table').append($row)
           });
           $( "#exportar" ).prop( "disabled", false );
+          $( ".bloque-reporte" ).show();
         })
         .fail(function() {
           $("#table> tbody:last").children().remove();
           $( "#exportar" ).prop( "disabled", true );
+          $( ".bloque-reporte" ).hide();
+          $(".distribuidoras").hide()
         })
     })
   });

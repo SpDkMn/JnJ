@@ -20,9 +20,11 @@
           <table id="data_representante" class="display" cellspacing="0" width="100%">
             <thead>
               <tr>
-                <th>PERIODO</th>
-                <th>CANAL</th>
                 <th>CONCURSO</th>
+                <th>CANAL</th>
+                <th>PERIODO</th>
+                <th>INICIO</th>
+                <th>FIN</th>
                 <th>DISTRIBUIDORAS</th>
                 <th>DESCARGAR</th>
               </tr>

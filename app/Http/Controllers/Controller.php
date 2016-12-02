@@ -12,7 +12,7 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, AuthorizesResources, DispatchesJobs, ValidatesRequests;
 
-    const PATH_FILE = 'C:\\xampp\\htdocs\\app\\files\\';
-    //const PATH_FILE = '/home/Code/jandj/app/files/';
+    //const PATH_FILE = 'C:\\xampp\\htdocs\\app\\files\\';
+    const PATH_FILE = '/home/Code/jandj/app/files/';
 
 }

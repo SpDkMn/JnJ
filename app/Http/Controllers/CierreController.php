@@ -17,11 +17,14 @@ class CierreController extends Controller
 {
     public function procesar_view(){
       $concurso = DB::table('concursos as c')
-      ->select('c.id')
-      ->join('cierres as ci', 'c.id', '=', 'ci.concurso_id')
-      ->where('ci.monto',null)
-      ->distinct()
-      ->get();
+        ->select('c.id')
+        ->join('cierres as ci', 'c.id', '=', 'ci.concurso_id')
+        ->where('ci.monto',null)
+        ->whereNull('c.deleted_at')
+        ->orderBy('c.f_inicio','desc')
+        ->orderBy('c.name','asc')
+        ->distinct()
+        ->get();
       $idCon=[];
       foreach($concurso as $i){
         array_push($idCon,$i->id);
@@ -75,7 +78,8 @@ class CierreController extends Controller
         ->join('ejecutivos as e', 'ci.ejecutivo_id', '=', 'e.id')
         ->join('representantes as r', 'ci.representante_id', '=', 'r.id')
         ->where('co.id','=',$co)
-        ->where('ci.monto',null);
+        ->whereNull('ci.monto')
+        ->whereNull('co.deleted_at');
 
       $cierres = $cierres->select($select)->get();
       /*dd($cierres);
@@ -135,7 +139,10 @@ class CierreController extends Controller
         ->join('distribuidoras as d', 'd.representante_id', '=', 'r.id')
         ->where('d.ejecutivo_id','=',Auth::user()->ejecutivo->id)
         ->where('c.f_fin', '<=', $fecha_actual)
-        ->where('c.f_fin', '>=', $fecha_limite)
+        //->where('c.f_fin', '>=', $fecha_limite)
+        ->whereNull('c.deleted_at')
+        ->orderBy('c.f_inicio','desc')
+        ->orderBy('c.name','asc')
         ->distinct()
         ->get();
       return view('cierres.index',['concursos'=>$result]);
@@ -277,6 +284,9 @@ class CierreController extends Controller
           ->join('representantes as r', 'c.representante_id', '=', 'r.id')
           ->join('distribuidoras as d', 'd.representante_id', '=', 'r.id')
           ->where('d.ejecutivo_id','=',Auth::user()->ejecutivo->id)
+          ->whereNull('c.deleted_at')
+          ->orderBy('c.f_inicio','desc')
+          ->orderBy('c.name','asc')
           ->distinct()
           ->get();
         return view('cierres.reporte',['concursos'=>$result]);
@@ -332,7 +342,8 @@ class CierreController extends Controller
         ->join('representantes as r', 'ci.representante_id', '=', 'r.id')
         ->where('co.id','=',$co)
         ->where('ci.confirmed','=','1')
-        ->whereIn('d.id', $ch);
+        ->whereIn('d.id', $ch)
+        ->whereNull('co.deleted_at');
 
         $cierres = $cierres->select($select)->get();
 
@@ -354,9 +365,12 @@ class CierreController extends Controller
           ->join('representantes as r', 'c.representante_id', '=', 'r.id')
           ->join('distribuidoras as d', 'd.representante_id', '=', 'r.id')
           ->where('d.ejecutivo_id','=',Auth::user()->ejecutivo->id)
+          ->whereNull('c.deleted_at')
+          ->orderBy('c.f_inicio','desc')
+          ->orderBy('c.name','asc')
           ->distinct()
           ->get();
-        return view('cierres.reporte_1',['concursos'=>$result,'cierres'=>$cierres,'header'=>$header]);
+        return view('cierres.reporte_post',['concursos'=>$result,'cierres'=>$cierres,'header'=>$header]);
     }
 
     public function confirmar_view(){
@@ -420,8 +434,8 @@ class CierreController extends Controller
         ->join('ejecutivos as e', 'ci.ejecutivo_id', '=', 'e.id')
         ->join('representantes as r', 'ci.representante_id', '=', 'r.id')
         ->where('co.id','=',$co)
-        ->where('ci.monto','<>',null)
-        ->where('ci.confirmed',null)
+        ->whereNotNull('ci.monto')
+        ->whereNull('ci.confirmed')
         ->whereIn('d.id', $ch);
 
         $cierres = $cierres->select($select)->get();
@@ -433,6 +447,9 @@ class CierreController extends Controller
             'c.periodo as periodo'
           )
           ->where('c.representante_id','=',Auth::user()->representante->id)
+          ->whereNull('c.deleted_at')
+          ->orderBy('c.f_inicio','desc')
+          ->orderBy('c.name','asc')
           ->get();
       return view('cierres.confirmar_cierre',['concursos'=>$result,'cierres'=>$cierres,'header'=>$header]);
     }
@@ -472,6 +489,9 @@ class CierreController extends Controller
           'c.periodo as periodo'
         )
         ->where('c.representante_id','=',Auth::user()->representante->id)
+        ->whereNull('c.deleted_at')
+        ->orderBy('c.f_inicio','desc')
+        ->orderBy('c.name','asc')
         ->get();
       return view('cierres.reporte_representante',['concursos'=>$result]);
     }
@@ -483,8 +503,11 @@ class CierreController extends Controller
           'c.name as titulo',
           'c.periodo as periodo'
         )
+        ->whereNull('c.deleted_at')
+        ->orderBy('c.f_inicio','desc')
+        ->orderBy('c.name','asc')
         ->get();
-      return view('cierres.reporte_admin_loyalty',['concursos'=>$result]);
+      return view('cierres.reporte_admin',['concursos'=>$result]);
     }
 
     public function reporte_view_representante(Request $request){
@@ -538,7 +561,8 @@ class CierreController extends Controller
         ->where('co.id','=',$co)
         ->where('ci.confirmed','=','1')
         ->where('ci.representante_id','=',Auth::user()->representante->id)
-        ->whereIn('d.id', $ch);
+        ->whereIn('d.id', $ch)
+        ->whereNull('co.deleted_at');
 
         $cierres = $cierres->select($select)->get();
 
@@ -558,8 +582,11 @@ class CierreController extends Controller
             'c.periodo as periodo'
           )
           ->where('c.representante_id','=',Auth::user()->representante->id)
+          ->whereNull('c.deleted_at')
+          ->orderBy('c.f_inicio','desc')
+          ->orderBy('c.name','asc')
           ->get();
-      return view('cierres.reporte_1representante',['concursos'=>$result,'cierres'=>$cierres,'header'=>$header]);
+      return view('cierres.reporte_representante_post',['concursos'=>$result,'cierres'=>$cierres,'header'=>$header]);
     }
 
     public function reporte_view_admin(Request $request){
@@ -617,7 +644,8 @@ class CierreController extends Controller
         ->join('representantes as r', 'ci.representante_id', '=', 'r.id')
         ->where('co.id','=',$co)
         ->where('ci.confirmed','=','1')
-        ->whereIn('d.id', $ch);
+        ->whereIn('d.id', $ch)
+        ->whereNull('co.deleted_at');
 
         $cierres = $cierres->select($select)->get();
 
@@ -636,7 +664,10 @@ class CierreController extends Controller
             'c.name as titulo',
             'c.periodo as periodo'
           )
+          ->whereNull('c.deleted_at')
+          ->orderBy('c.f_inicio','desc')
+          ->orderBy('c.name','asc')
           ->get();
-      return view('cierres.reporte_1_admin_loyalty',['concursos'=>$result,'cierres'=>$cierres,'header'=>$header]);
+      return view('cierres.reporte_admin_post',['concursos'=>$result,'cierres'=>$cierres,'header'=>$header]);
     }
 }
