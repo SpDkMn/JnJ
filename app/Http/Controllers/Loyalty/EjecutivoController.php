@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Loyalty;
 
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use App\Ejecutivo as Ejecutivo;
+use App\Http\Controllers\Controller;
+
 use DB;
 use App\Http\Requests\EjecutivoCargaRequest as EjecutivoCargaRequest;
 use App\Http\Controllers\DBExcel as DBExcel;
@@ -17,13 +18,11 @@ class EjecutivoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
+    public function index(){
         return view('mantenimiento.ejecutivo.index');
     }
 
-    public function list()
-    {
+    public function list(){
       $result = DB::table('ejecutivos as j')
         ->select(
           'u.dni as DNI',
@@ -43,24 +42,13 @@ class EjecutivoController extends Controller
       $array = ["data"=>$array];
       return $array;
     }
+
     /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(EjecutivoCargaRequest $request)
-    {
+    public function create(EjecutivoCargaRequest $request){
       // genera el nombre del nuevo archivo a guardar
       $string = 'cargaDeEjecutivos';
       $name = date('d-m-Y-hisu').'.'.$request->file($string)->guessExtension();
@@ -74,8 +62,13 @@ class EjecutivoController extends Controller
       //return redirect()->back()->with('status_data', 'El archivo fue cargado correctamente.');
     }
 
-    public function storeF(Request $request)
-    {
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request){
       // Valida los campos necesarios para la carga
       $this->validate($request, [
         'submit' => 'required',
@@ -99,8 +92,7 @@ class EjecutivoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
+    public function show($id){
         //
     }
 
@@ -110,8 +102,7 @@ class EjecutivoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
+    public function edit($id){
         //
     }
 
@@ -122,8 +113,7 @@ class EjecutivoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
+    public function update(Request $request, $id){
         //
     }
 
@@ -133,8 +123,7 @@ class EjecutivoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
+    public function destroy($id){
         //
     }
 }

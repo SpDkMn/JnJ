@@ -1,14 +1,16 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Trade;
 
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use App\Http\Requests\CargarConcursoRequest as CargarConcursoRequest;
+use App\Http\Controllers\Controller;
+
 use App\Concurso as Concurso;
 use DB;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\CargarConcursoRequest as CargarConcursoRequest;
 
 class ConcursoController extends Controller
 {
@@ -21,44 +23,7 @@ class ConcursoController extends Controller
         return view('concurso.index');
     }
 
-    public function view(){
-        return view('concurso.view');
-    }
-
-    public function view_distribuidoras($id){
-        return view('concurso.view_distribuidoras',['id'=>$id]);
-    }
-
-    public function reporte_concursos_admin(){
-      $concursos = Concurso::all();
-      return view('mantenimiento.concurso.index',['concursos'=>$concursos]);
-    }
-
-    public function list_admin(){
-      $result = DB::table('concursos as c')
-        ->select(
-          //'c.codconcurso as CODIGO',
-          'c.name as NOMBRE',
-          'c.periodo as PERIODO',
-          'c.f_inicio as INICIO',
-          'c.f_fin as FIN',
-          DB::raw('CONCAT(\'<a href="'.URL('/concurso/download/').'/\',c.id,\'"><img src="'.asset('img/pdf.png').'" alt="Archivo de excel" class="img-thumbnail img-responsive"></a>\') as DOWNLOAD'),
-          DB::raw('CONCAT(\'<a href="'.URL('/concurso/editar/\',c.id,\'').'" style="text-decoration:none;color: #e5101f;" class="id_distribuidora" data-id="\',c.id,\'"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>\') as EDITAR'),
-          DB::raw('CONCAT(\'<a href="'.URL('/concurso/eliminar/\',c.id,\'').'" style="text-decoration:none;color: #e5101f;" class="id_distribuidora" data-id="\',c.id,\'"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>\') as ELIMINAR')
-        )
-        ->whereNull('c.deleted_at')
-        ->orderBy('c.f_inicio','desc')
-        ->orderBy('c.name','asc')
-        ->get();
-      $array = array();
-      foreach($result as $a){
-        array_push($array,array_values(get_object_vars($a)));
-      }
-      $array = ["data"=>$array];
-      return $array;
-    }
-
-    public function list(){
+    public function lista(){
       $result = DB::table('concursos as c')
         ->select(
           //'c.codconcurso as CODIGO',
@@ -81,70 +46,6 @@ class ConcursoController extends Controller
       }
       $array = ["data"=>$array];
       return $array;
-    }
-
-    public function list_view(){
-      $result = DB::table('concursos as c')
-        ->select(
-          'c.name as NOMBRE',
-          'r.codcanal as CANAL',
-          'c.periodo as PERIODO',
-          'c.f_inicio as INICIO',
-          'c.f_fin as FIN',
-          DB::raw('CONCAT(\'<a href="'.URL('concursos/distribuidoras/').'/\',c.id,\'" style="text-decoration:none;color: #e5101f;" class="id_distribuidora"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>\') as VER'),
-          DB::raw('CONCAT(\'<a href="'.URL('download/concurso/').'/\',c.id,\'"><img src="'.asset('img/pdf.png').'" alt="Archivo de excel" class="img-thumbnail img-responsive"></a>\') as DOWNLOAD')
-        )
-        ->join('representantes as r', 'c.representante_id', '=', 'r.id')
-        ->join('distribuidoras as d', 'd.representante_id', '=', 'r.id')
-        ->where('d.ejecutivo_id','=',Auth::user()->ejecutivo->id)
-        ->whereNull('c.deleted_at')
-        ->orderBy('c.f_inicio','desc')
-        ->orderBy('c.name','asc')
-        ->distinct()
-        ->get();
-      $array = array();
-      foreach($result as $a){
-        array_push($array,array_values(get_object_vars($a)));
-      }
-      $array = ["data"=>$array];
-      return $array;
-    }
-
-    public function list_distribuidoras($id){
-      $c = Concurso::find($id);
-      $r = $c->representante;
-      $e = Auth::user()->ejecutivo;
-      $result = DB::table('distribuidoras as d')
-        ->select(
-          'd.coddistribuidora as CODIGO',
-          'd.zona as ZONA',
-          'd.name as RAZONSOCIAL',
-          'd.phone as TELEFONO',
-          'd.email as CORREO'
-        )
-        ->where('d.representante_id','=',$r->id)
-        ->where('d.ejecutivo_id','=',$e->id)
-        ->get();
-      $array = array();
-      foreach($result as $a){
-        array_push($array,array_values(get_object_vars($a)));
-      }
-      $array = ["data"=>$array];
-      return $array;
-    }
-
-    public function download($id){
-      $concurso = Concurso::find($id);
-      return response()->download(self::PATH_FILE.'concursos/'.$concurso->namefile);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create(){
-        //
     }
 
     /**
@@ -186,24 +87,12 @@ class ConcursoController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        return Concurso::find($id);
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
+    public function edit($id){
         $c = Concurso::find($id);
         return view('concurso.edit',['concurso'=>$c]);
     }
@@ -215,9 +104,7 @@ class ConcursoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
-
+    public function update(Request $request, $id){
       $c = Concurso::find($id);
       $c->name = $request->nombreDelConcurso;
       //$c->codconcurso = $request->codigoDeConcurso;
@@ -257,10 +144,14 @@ class ConcursoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
+    public function destroy($id){
         $c = Concurso::find($id);
         $c->delete();
         return redirect()->route('concurso_view');
+    }
+
+    public function download($id){
+      $concurso = Concurso::find($id);
+      return response()->download(self::PATH_FILE.'concursos/'.$concurso->namefile);
     }
 }

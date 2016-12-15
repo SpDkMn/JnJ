@@ -53,9 +53,24 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapWebRoutes(Router $router)
     {
         $router->group([
-            'namespace' => $this->namespace, 'middleware' => 'web',
+            'namespace' => $this->namespace,
+            'middleware' => 'web',
         ], function ($router) {
             require app_path('Http/routes.php');
+        });
+
+        $router->group([
+            'namespace' => $this->namespace.'\Trade',
+            'middleware' => ['web','auth','representante'],
+        ], function ($router) {
+            require app_path('Http/routesTrade.php');
+        });
+
+        $router->group([
+            'namespace' => $this->namespace.'\Loyalty',
+            'middleware' => ['web','auth','loyalty'],
+        ], function ($router) {
+            require app_path('Http/routesLoyalty.php');
         });
     }
 }

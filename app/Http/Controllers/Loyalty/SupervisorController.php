@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Loyalty;
 
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use App\Supervisor as Supervisor;
+use App\Http\Controllers\Controller;
+
 use DB;
 use App\Http\Requests\SupervisoresCargaRequest as SupervisoresCargaRequest;
 use App\Http\Controllers\DBExcel as DBExcel;
@@ -17,8 +18,7 @@ class SupervisorController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
+    public function index(){
         return view('mantenimiento.supervisor.index');
     }
 
@@ -51,19 +51,7 @@ class SupervisorController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(SupervisoresCargaRequest $request)
-    {
+    public function create(SupervisoresCargaRequest $request){
         // genera el nombre del nuevo archivo a guardar
         $string = 'cargaDeSupervisor';
         $name = date('d-m-Y-hisu').'.'.$request->file($string)->guessExtension();
@@ -75,8 +63,13 @@ class SupervisorController extends Controller
         return DBExcel::cargarSupervisores($path,$name);
     }
 
-    public function storeF(Request $request)
-    {
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request){
       // Valida los campos necesarios para la carga
       $this->validate($request, [
         'submit' => 'required',
@@ -99,8 +92,7 @@ class SupervisorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
+    public function show($id){
         //
     }
 
@@ -110,8 +102,7 @@ class SupervisorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
+    public function edit($id){
         //
     }
 
@@ -122,8 +113,7 @@ class SupervisorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
+    public function update(Request $request, $id){
         //
     }
 
@@ -133,8 +123,7 @@ class SupervisorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
+    public function destroy($id){
         //
     }
 }

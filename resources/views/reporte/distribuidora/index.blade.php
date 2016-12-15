@@ -44,7 +44,6 @@
           <table id="data_representante" class="display" cellspacing="0" width="100%">
             <thead>
               <tr>
-                <th>RUC</th>
                 <th>CODIGO</th>
                 <th>ZONA</th>
                 <th>RAZÓN SOCIAL</th>
